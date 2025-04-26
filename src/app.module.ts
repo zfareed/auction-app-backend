@@ -6,6 +6,8 @@ import { User } from './entities/user.entity';
 import { Item } from './entities/item.entity';
 import { Bid } from './entities/bid.entity';
 import { SeederService } from './database/seeder.service';
+import { ItemsController } from './controllers/items.controller';
+import { ItemsService } from './services/items.service';
 
 @Module({
   imports: [
@@ -21,7 +23,7 @@ import { SeederService } from './database/seeder.service';
     }),
     TypeOrmModule.forFeature([User, Item, Bid]),
   ],
-  controllers: [AppController],
-  providers: [AppService, SeederService],
+  controllers: [AppController, ItemsController],
+  providers: [AppService, SeederService, ItemsService],
 })
 export class AppModule {}
