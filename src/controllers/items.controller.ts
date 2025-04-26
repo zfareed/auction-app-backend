@@ -1,7 +1,8 @@
-import { Controller, Post, Body, Get, ValidationPipe } from '@nestjs/common';
+import { Controller, Post, Body, Get, ValidationPipe, Query } from '@nestjs/common';
 import { ItemsService } from '../services/items.service';
 import { CreateItemDto } from '../dto/create-item.dto';
 import { Item } from '../entities/item.entity';
+import { GetItemsDto } from '../dto/get-items.dto';
 
 @Controller('items')
 export class ItemsController {
@@ -13,7 +14,7 @@ export class ItemsController {
   }
 
   @Get()
-  async findAll(): Promise<Item[]> {
-    return this.itemsService.findAll();
+  async findAll(@Query(ValidationPipe) getItemsDto: GetItemsDto) {
+    return this.itemsService.findAll(getItemsDto);
   }
 } 
