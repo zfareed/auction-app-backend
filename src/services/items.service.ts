@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Item } from '../entities/item.entity';
@@ -55,6 +55,39 @@ export class ItemsService {
         hasNextPage: page < totalPages,
         hasPreviousPage: page > 1,
       },
+    };
+  }
+
+  async findOne(id: number) {
+    const item = await this.itemsRepository.findOne({
+      where: { id },
+      relations: ['bids', 'bids.user'],
+      order: {
+        bids: {
+          createdAt: 'DESC'
+        }
+      }
+    });
+
+    if (!item) {
+      throw new NotFoundException(`Item with ID ${id} not found`);
+    }
+
+    // Calculate time remaining
+    const timeRemaining = new Date(item.auctionEndTime).getTime() - new Date().getTime();
+    const isActive = timeRemaining > 0;
+
+    return {
+      ...item,
+      bids: item.bids.map(bid => ({
+        id: bid.id,
+        amount: bid.amount,
+        createdAt: bid.createdAt,
+        userId: bid.user.id,
+        username: bid.user.username
+      })),
+      timeRemaining: isActive ? timeRemaining : 0,
+      status: isActive ? 'active' : 'ended'
     };
   }
 } 

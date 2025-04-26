@@ -10,6 +10,7 @@ import { ItemsController } from './controllers/items.controller';
 import { ItemsService } from './services/items.service';
 import { BidsController } from './controllers/bids.controller';
 import { BidsService } from './services/bids.service';
+import { AuctionGateway } from './gateways/auction.gateway';
 
 @Module({
   imports: [
@@ -26,6 +27,6 @@ import { BidsService } from './services/bids.service';
     TypeOrmModule.forFeature([User, Item, Bid]),
   ],
   controllers: [AppController, ItemsController, BidsController],
-  providers: [AppService, SeederService, ItemsService, BidsService],
+  providers: [AppService, SeederService, ItemsService, BidsService, AuctionGateway],
 })
 export class AppModule {}

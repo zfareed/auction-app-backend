@@ -5,6 +5,7 @@ import { Bid } from '../entities/bid.entity';
 import { Item } from '../entities/item.entity';
 import { User } from '../entities/user.entity';
 import { CreateBidDto } from '../dto/create-bid.dto';
+import { AuctionGateway } from '../gateways/auction.gateway';
 
 @Injectable()
 export class BidsService {
@@ -15,6 +16,7 @@ export class BidsService {
     private itemsRepository: Repository<Item>,
     @InjectRepository(User)
     private usersRepository: Repository<User>,
+    private auctionGateway: AuctionGateway,
   ) {}
 
   async create(createBidDto: CreateBidDto): Promise<Bid> {
@@ -61,7 +63,22 @@ export class BidsService {
     item.currentHighestBid = amount;
     await this.itemsRepository.save(item);
 
-    return this.bidsRepository.save(bid);
+    // Save the bid
+    const savedBid = await this.bidsRepository.save(bid);
+    
+    // Format the bid data for notification
+    const bidData = {
+      id: savedBid.id,
+      amount: savedBid.amount,
+      createdAt: savedBid.createdAt,
+      userId: user.id,
+      username: user.username,
+    };
+
+    // Notify all clients about the new bid
+    this.auctionGateway.notifyNewBid(itemId, bidData);
+
+    return savedBid;
   }
 
   async getItemBids(itemId: number) {
