@@ -8,6 +8,8 @@ import { Bid } from './entities/bid.entity';
 import { SeederService } from './database/seeder.service';
 import { ItemsController } from './controllers/items.controller';
 import { ItemsService } from './services/items.service';
+import { BidsController } from './controllers/bids.controller';
+import { BidsService } from './services/bids.service';
 
 @Module({
   imports: [
@@ -23,7 +25,7 @@ import { ItemsService } from './services/items.service';
     }),
     TypeOrmModule.forFeature([User, Item, Bid]),
   ],
-  controllers: [AppController, ItemsController],
-  providers: [AppService, SeederService, ItemsService],
+  controllers: [AppController, ItemsController, BidsController],
+  providers: [AppService, SeederService, ItemsService, BidsService],
 })
 export class AppModule {}
