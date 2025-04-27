@@ -1,5 +1,6 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { User } from './entities/user.entity';
@@ -14,15 +15,22 @@ import { AuctionGateway } from './gateways/auction.gateway';
 
 @Module({
   imports: [
-    TypeOrmModule.forRoot({
-      type: 'postgres',
-      host: 'localhost',
-      port: 5432,
-      username: 'zain93',
-      password: 'zain123*',
-      database: 'auction-app',
-      entities: [User, Item, Bid],
-      synchronize: true, // Set to false in production
+    ConfigModule.forRoot({
+      isGlobal: true, // Make config available throughout the application
+    }),
+    TypeOrmModule.forRootAsync({
+      imports: [ConfigModule],
+      inject: [ConfigService],
+      useFactory: (configService: ConfigService) => ({
+        type: 'postgres',
+        host: configService.get('DB_HOST'),
+        port: parseInt(configService.get('DB_PORT', '5432')),
+        username: configService.get('DB_USERNAME'),
+        password: configService.get('DB_PASSWORD'),
+        database: configService.get('DB_DATABASE'),
+        entities: [User, Item, Bid],
+        synchronize: configService.get('NODE_ENV') !== 'production',
+      }),
     }),
     TypeOrmModule.forFeature([User, Item, Bid]),
   ],
