@@ -6,7 +6,7 @@ async function bootstrap() {
   
   // Enable CORS
   app.enableCors({
-    origin: ['http://localhost:3000', 'http://localhost:5173'], // Add your frontend URLs here
+    origin: ['http://localhost:3000', 'http://localhost:5173', 'https://auction-app-frontend-naoq.onrender.com'], // Add your frontend URLs here
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
     credentials: true,
   });
