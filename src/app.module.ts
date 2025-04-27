@@ -29,7 +29,7 @@ import { AuctionGateway } from './gateways/auction.gateway';
         password: configService.get('DB_PASSWORD'),
         database: configService.get('DB_DATABASE'),
         entities: [User, Item, Bid],
-        synchronize: false,
+        synchronize: true,
       }),
     }),
     TypeOrmModule.forFeature([User, Item, Bid]),
