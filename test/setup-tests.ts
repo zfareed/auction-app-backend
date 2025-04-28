@@ -1,0 +1,1 @@
+jest.setTimeout(30000); // Increase the timeout for E2E tests 
