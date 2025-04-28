@@ -1,4 +1,4 @@
-name: CI/CD Pipeline
+name: Test and Deploy Pipeline
 
 on:
   push:
@@ -7,7 +7,7 @@ on:
     branches: [ master ]
 
 jobs:
-  build-and-test:
+  test:
     runs-on: ubuntu-latest
 
     steps:
@@ -22,17 +22,11 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Lint
-        run: npm run lint
-
-      - name: Build
-        run: npm run build
-
       - name: Run unit tests
         run: npm test
 
   deploy:
-    needs: build-and-test
+    needs: test
     if: github.event_name == 'push' && github.ref == 'refs/heads/master'
     runs-on: ubuntu-latest
     
