@@ -29,11 +29,9 @@ A scalable real-time backend service for an online auction platform, developed u
   
 
 ```bash
-
 git clone https://github.com/zfareed/auction-app-backend
 
 cd auction-app-backend
-
 ```
 
   
@@ -43,7 +41,6 @@ cd auction-app-backend
   
 
 ```bash
-
 npm install
 
 ```
@@ -61,23 +58,14 @@ Create a `.env` file in the root directory with the following environment variab
 ```env
 
 # Database Configuration
-
 DB_HOST=localhost
-
 DB_PORT=5432
-
 DB_USERNAME=postgres
-
 DB_PASSWORD=your_password
-
 DB_DATABASE=auction_app
 
-  
-
 # API Configuration
-
 NODE_ENV=development
-
 PORT=3000
 
 ```
@@ -90,10 +78,7 @@ PORT=3000
 
 ### Development Mode
 
-  
-
 ```bash
-
 npm  run  start:dev
 
 ```
@@ -106,10 +91,7 @@ The application will be available at `http://localhost:3000` and will automatica
 
 ### Debug Mode
 
-  
-
 ```bash
-
 npm  run  start:debug
 
 ```
@@ -121,7 +103,6 @@ npm  run  start:debug
   
 
 ```bash
-
 npm  run  build
 
 npm  run  start:prod
@@ -195,7 +176,6 @@ You can use Docker to build and run the application:
   
 
 ```bash
-
 docker build -t auction-app-backend .
 
 ```
@@ -207,7 +187,6 @@ docker build -t auction-app-backend .
   
 
 ```bash
-
 sudo docker run --env-file .env -p 3000:3000 --network host auction-app-backend
 
 ```
@@ -227,7 +206,6 @@ Run tests with Jest:
   
 
 ```bash
-
 npm test
 
 ```
