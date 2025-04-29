@@ -32,6 +32,22 @@ import { UsersService } from './services/users.service';
         database: configService.get('DB_DATABASE'),
         entities: [User, Item, Bid],
         synchronize: true,
+        poolSize: 20,                   // Maximum number of connections
+        pool: {
+          min: 5,                       // Minimum number of connections in pool
+          max: 20,                      // Maximum number of connections in pool
+          idle: 10000,                  // Close idle connections after 10 seconds
+          acquire: 30000,               // Maximum time to acquire connection (30 seconds)
+          evict: 30000,                 // Run cleanup every 30 seconds
+        },
+        extra: {
+          // PostgreSQL specific pool settings
+          max: 20,                      // Maximum connections same as pool max
+          connectionTimeoutMillis: 10000, // Timeout when acquiring a connection
+          idleTimeoutMillis: 10000,     // Idle connection timeout
+        },
+        logging: ['error', 'schema', 'warn'],
+        logger: 'advanced-console',
       }),
     }),
     TypeOrmModule.forFeature([User, Item, Bid]),
