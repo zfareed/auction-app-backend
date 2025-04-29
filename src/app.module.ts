@@ -1,6 +1,8 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule, ConfigService } from '@nestjs/config';
+import { ThrottlerModule, ThrottlerGuard } from '@nestjs/throttler';
+import { APP_GUARD } from '@nestjs/core';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { User } from './entities/user.entity';
@@ -19,6 +21,17 @@ import { UsersService } from './services/users.service';
   imports: [
     ConfigModule.forRoot({
       isGlobal: true, // Make config available throughout the application
+    }),
+    // Configure the ThrottlerModule
+    ThrottlerModule.forRootAsync({
+      imports: [ConfigModule],
+      inject: [ConfigService],
+      useFactory: (config: ConfigService) => ([
+        {
+          ttl: config.get('THROTTLE_TTL', 60), // Time window in seconds
+          limit: config.get('THROTTLE_LIMIT', 100), // Request limit per window
+        },
+      ]),
     }),
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],
@@ -53,6 +66,18 @@ import { UsersService } from './services/users.service';
     TypeOrmModule.forFeature([User, Item, Bid]),
   ],
   controllers: [AppController, ItemsController, BidsController, UsersController],
-  providers: [AppService, SeederService, ItemsService, BidsService, AuctionGateway, UsersService],
+  providers: [
+    // Add global guard for rate limiting
+    {
+      provide: APP_GUARD,
+      useClass: ThrottlerGuard,
+    },
+    AppService,
+    SeederService,
+    ItemsService,
+    BidsService,
+    AuctionGateway,
+    UsersService
+  ],
 })
 export class AppModule {}
